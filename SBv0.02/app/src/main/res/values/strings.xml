@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">SBv0.02</string>
+    <string name="storyboard">Storyboard</string>
+    <string name="create_storyboard">Create Storyboard</string>
+    <string name="load_storyboard">Load Storyboard</string>
+    <string name="options">Options</string>
+    <string name="quit">Quit</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Submit</string>
+    <string name="title_activity_story_board">StoryBoard</string>
+    <string name="scene_title">scene_title</string>
+    <string name="write_synopsis">write_synopsis</string>
+    <string name="no_scenes_found">No scenes found</string>
+    <string name="add_scene">Add Scene</string>
+</resources>

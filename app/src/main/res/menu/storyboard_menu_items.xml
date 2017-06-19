@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/new_card"
+        android:title="@string/add_scene"/>
+    <item
+        android:id="@+id/load_story"
+        android:title="@string/load_storyboard"/>
+    <item
+        android:id="@+id/delete_story"
+        android:title="Delete Story"/>
+</menu>
