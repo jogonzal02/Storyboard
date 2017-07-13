@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     void option(){
-        Toast.makeText(this,"Lol",
+        Toast.makeText(this,"To Be Implemented",
                 Toast.LENGTH_LONG).show();
     }
 
