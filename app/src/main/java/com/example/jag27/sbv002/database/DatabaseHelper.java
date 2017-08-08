@@ -11,7 +11,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     //Database info and version
     private static final String DATABASE_NAME = "storyboard.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -24,12 +24,18 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        Log.w(DatabaseHelper.class.getName(),
-                "Updating database from version " + i + "to " + i1 +
-                        ", which will destroy all old data");
+//        Log.w(DatabaseHelper.class.getName(),
+//                "Updating database from version " + i + "to " + i1 +
+//                        ", which will destroy all old data");
+//
+//        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Constants.NOTES_TABLE);
+//        onCreate(sqLiteDatabase);
 
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Constants.NOTES_TABLE);
-        onCreate(sqLiteDatabase);
+        String sql = "ALTER TABLE " + Constants.NOTES_TABLE + " ADD COLUMN " +
+                Constants.COLUMN_SUBPLOT + " TEXT";
+        sqLiteDatabase.execSQL(sql);
+
+
     }
 
     //Creating table query
@@ -39,6 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             + Constants.COLUMN_ID + " integer primary key autoincrement, "
             + Constants.COLUMN_TITLE + " text not null, "
             + Constants.COLUMN_SUBTITLE + " text not null, "
+            + Constants.COLUMN_SUBPLOT + " text, "
             + Constants.COLUMN_CONTENT + " text not null, "
             + Constants.COLUMN_POSITION + " integer not null, "
             + Constants.COLUMN_MODIFIED_TIME + " integer not null, "

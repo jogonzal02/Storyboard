@@ -9,6 +9,7 @@ public class Constants {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_SUBTITLE = "subtitle";
+    public static final String COLUMN_SUBPLOT = "subplot";
     public static final String COLUMN_CONTENT = "content";
     public static final String COLUMN_POSITION = "position";
     public static final String COLUMN_MODIFIED_TIME = "modified_time";

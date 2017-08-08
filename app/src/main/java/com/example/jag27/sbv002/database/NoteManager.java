@@ -27,10 +27,24 @@ public class NoteManager {
 //        dbhelper.close();
 //    }
 
-    public void insert(String title, String subTitle, String content, int position){
+    public void insert(String title, String subTitle,String content, int position){
         ContentValues contentValues = new ContentValues();
         contentValues.put(Constants.COLUMN_TITLE, title);
         contentValues.put(Constants.COLUMN_SUBTITLE, subTitle);
+        contentValues.put(Constants.COLUMN_CONTENT, content);
+        contentValues.put(Constants.COLUMN_POSITION, position);
+        contentValues.put(Constants.COLUMN_MODIFIED_TIME, System.currentTimeMillis());
+        contentValues.put(Constants.COLUMN_CREATED_TIME, System.currentTimeMillis());
+
+        database.insert(Constants.NOTES_TABLE, null, contentValues);
+    }
+
+
+    public void insert(String title, String subTitle, String subPlot,String content, int position){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Constants.COLUMN_TITLE, title);
+        contentValues.put(Constants.COLUMN_SUBTITLE, subTitle);
+        contentValues.put(Constants.COLUMN_SUBPLOT,subPlot);
         contentValues.put(Constants.COLUMN_CONTENT, content);
         contentValues.put(Constants.COLUMN_POSITION, position);
         contentValues.put(Constants.COLUMN_MODIFIED_TIME, System.currentTimeMillis());
@@ -68,10 +82,27 @@ public class NoteManager {
                 Constants.COLUMN_ID + "=" + _id, null);
     }
 
+
+    public int update(long _id, String title,String subTitle,String subPlot , String content){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Constants.COLUMN_TITLE, title);
+        contentValues.put(Constants.COLUMN_SUBTITLE, subTitle);
+        contentValues.put(Constants.COLUMN_SUBPLOT,subPlot);
+        contentValues.put(Constants.COLUMN_CONTENT, content);
+        contentValues.put(Constants.COLUMN_MODIFIED_TIME, System.currentTimeMillis());
+
+//        int i = database.update(Constants.NOTES_TABLE, contentValues,
+//                Constants.COLUMN_ID + "=" + _id, null);
+        return database.update(Constants.NOTES_TABLE, contentValues,
+                Constants.COLUMN_ID + "=" + _id, null);
+    }
+
+
+
     //Grab database rows with "title" in the COLUMN_TITLE
     public Cursor fetch(String title){
         String[] columns = new String[] { Constants.COLUMN_ID, Constants.COLUMN_TITLE,
-                Constants.COLUMN_TITLE, Constants.COLUMN_SUBTITLE, Constants.COLUMN_CONTENT,Constants.COLUMN_POSITION,
+                Constants.COLUMN_TITLE, Constants.COLUMN_SUBTITLE, Constants.COLUMN_SUBPLOT, Constants.COLUMN_CONTENT,Constants.COLUMN_POSITION,
                 Constants.COLUMN_MODIFIED_TIME, Constants.COLUMN_CREATED_TIME };
 
         String whereClause = Constants.COLUMN_TITLE + " = ?";
@@ -94,6 +125,26 @@ public class NoteManager {
 
         Cursor cursor = database.query(Constants.NOTES_TABLE,columns, null, null,
                 Constants.COLUMN_TITLE, null, null);
+
+        if(cursor != null){
+            cursor.moveToFirst();
+
+        }
+        return cursor;
+
+    }
+
+    public Cursor fetchSubplots(String title){
+        String[] columns = new String[] { Constants.COLUMN_ID, Constants.COLUMN_TITLE,
+                Constants.COLUMN_TITLE, Constants.COLUMN_SUBTITLE, Constants.COLUMN_CONTENT,
+                Constants.COLUMN_MODIFIED_TIME, Constants.COLUMN_CREATED_TIME };
+
+        String where = Constants.COLUMN_TITLE + " = ? AND " +
+                Constants.COLUMN_SUBPLOT + " IS NOT NULL";
+        String[] whereArgs = new String[]{title};
+
+        Cursor cursor = database.query(Constants.NOTES_TABLE,columns, where, whereArgs,
+                Constants.COLUMN_SUBTITLE, null, null);
 
         if(cursor != null){
             cursor.moveToFirst();

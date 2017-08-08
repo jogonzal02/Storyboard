@@ -63,6 +63,7 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
         ArrayList noteData = new ArrayList<>();
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
             String titleColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_SUBTITLE));
+            String subPlotColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_SUBPLOT));
             String contentColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CONTENT));
             int idColumn = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_ID));
             int posColumn = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_POSITION));
@@ -70,6 +71,7 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
             Note note = new Note();
             note.setId(Integer.toString(idColumn));
             note.setTitle(titleColumn);
+            note.setSubPlot(subPlotColumn);
             note.setContent(contentColumn);
             note.setPos(posColumn);
             noteData.add(note);
@@ -114,6 +116,13 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
             case R.id.load_story:
                 Intent loader = new Intent(getApplicationContext(),Load.class);
                 startActivity(loader);
+                break;
+            case R.id.sort_by_subplot:
+                Bundle bundle = new Bundle();
+                bundle.putString("title", storyTitle);
+                SortBySubplotFragment sortBySubplotFragment = new SortBySubplotFragment();
+                sortBySubplotFragment.setArguments(bundle);
+                sortBySubplotFragment.show(getFragmentManager(),"create_SBS_fragment");
                 break;
             case R.id.delete_story:
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);

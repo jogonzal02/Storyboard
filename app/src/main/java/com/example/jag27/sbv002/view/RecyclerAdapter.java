@@ -60,7 +60,11 @@ implements ItemTouchHelperAdapter{
         Typeface courierFont = Typeface.createFromAsset(context.getAssets(), "fonts/courier.TTF");
         Note note = notes.get(position);
 
-        holder.titleText.setText(note.getTitle());
+        if(note.getSubPlot() == null){
+            holder.titleText.setText(note.getTitle());
+        }else{
+            holder.titleText.setText(note.getTitle()+": "+ note.getSubPlot() );
+        }
         holder.titleText.setTypeface(courierFont);
 
         holder.contentText.setText(note.getContent());

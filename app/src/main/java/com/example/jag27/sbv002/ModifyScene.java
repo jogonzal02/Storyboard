@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import com.example.jag27.sbv002.database.NoteManager;
 
@@ -29,9 +31,11 @@ public class ModifyScene extends AppCompatActivity {
 
         setTitle("Modify Scene");
 
+        //Open DB
         noteManager = new NoteManager(this);
         noteManager.open();
 
+        //Set Font type
         Typeface courierFont = Typeface.createFromAsset(getAssets(), "fonts/courier.TTF");
         subTitleText = (EditText) findViewById(R.id.modSceneTitleText);
         contentText = (EditText) findViewById(R.id.modSceneDescriptionText);
@@ -67,10 +71,18 @@ public class ModifyScene extends AppCompatActivity {
                 final String subTitle = subTitleText.getText().toString();
                 final String desc = contentText.getText().toString();
 
+                Pattern pattern = Pattern.compile("(.*)\\s*:\\s*(.*)");
+                Matcher matcher = pattern.matcher(subTitle);
+                if(matcher.find()){
+                    noteManager.update(_id,storyTitle,matcher.group(1), matcher.group(2),desc);
+                } else {
+                    noteManager.update(_id,storyTitle,subTitle,desc);
+                }
+
                 Toast.makeText(this,"Saving Scene, Returning to Storyboard",
                         Toast.LENGTH_SHORT).show();
 
-                noteManager.update(_id,storyTitle,subTitle,desc);
+                //noteManager.update(_id,storyTitle,subTitle,desc);
 
                 Intent main = new Intent(getApplicationContext(),StoryBoard.class)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
