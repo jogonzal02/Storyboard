@@ -60,7 +60,7 @@ public class AddScene extends AppCompatActivity {
                 final String subTitle = subTitleEditText.getText().toString();
                 final String desc = descEditText.getText().toString();
 
-                Pattern pattern = Pattern.compile("(.*)\\s*:\\s*(.*)");
+                Pattern pattern = Pattern.compile("\\s*(\\S.*\\S)\\s*:\\s*(\\S.*\\S)\\s*");
                 Matcher matcher = pattern.matcher(subTitle);
                 if(matcher.find()){
                     noteManager.insert(storyTitle,matcher.group(1), matcher.group(2),desc, notePos);

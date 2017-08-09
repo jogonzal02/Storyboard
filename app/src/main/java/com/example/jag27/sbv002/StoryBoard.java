@@ -41,18 +41,26 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        String subPlot = null;
         notePos = 0;
 
         storyTitle = getIntent().getStringExtra("FileName");
+        subPlot = getIntent().getStringExtra("SubTitle");
         setTitle(storyTitle);
 
         //Get note data from database, if story title previously created
         noteManager = new NoteManager(this);
         noteManager.open();
-        Cursor cursor = noteManager.fetch(storyTitle);
+        Cursor cursor;
+        if (subPlot == null)cursor = noteManager.fetch(storyTitle);
+        else {
+            cursor = noteManager.fetchStoriesSubPlot(storyTitle, subPlot);
+            notePos = getIntent().getIntExtra("MaxNote",notePos);
+        }
 
         //Get the position of the last note
-        if(cursor.moveToFirst()){
+        if(cursor.moveToFirst() && subPlot== null){
             Cursor lastCursor = cursor;
             lastCursor.moveToLast();
             notePos = lastCursor.getInt(lastCursor.getColumnIndex(Constants.COLUMN_POSITION));
@@ -120,6 +128,7 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
             case R.id.sort_by_subplot:
                 Bundle bundle = new Bundle();
                 bundle.putString("title", storyTitle);
+                bundle.putInt("MaxNote", notePos);
                 SortBySubplotFragment sortBySubplotFragment = new SortBySubplotFragment();
                 sortBySubplotFragment.setArguments(bundle);
                 sortBySubplotFragment.show(getFragmentManager(),"create_SBS_fragment");

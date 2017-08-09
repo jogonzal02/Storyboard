@@ -71,7 +71,7 @@ public class ModifyScene extends AppCompatActivity {
                 final String subTitle = subTitleText.getText().toString();
                 final String desc = contentText.getText().toString();
 
-                Pattern pattern = Pattern.compile("(.*)\\s*:\\s*(.*)");
+                Pattern pattern = Pattern.compile("\\s*(\\S.*\\S)\\s*:\\s*(\\S.*\\S)\\s*");
                 Matcher matcher = pattern.matcher(subTitle);
                 if(matcher.find()){
                     noteManager.update(_id,storyTitle,matcher.group(1), matcher.group(2),desc);

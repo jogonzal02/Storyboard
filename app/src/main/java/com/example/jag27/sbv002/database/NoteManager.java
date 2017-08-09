@@ -154,6 +154,25 @@ public class NoteManager {
 
     }
 
+    public Cursor fetchStoriesSubPlot(String title, String subPlot){
+        String[] columns = new String[] { Constants.COLUMN_ID, Constants.COLUMN_TITLE,
+                Constants.COLUMN_TITLE, Constants.COLUMN_SUBTITLE, Constants.COLUMN_SUBPLOT, Constants.COLUMN_CONTENT,Constants.COLUMN_POSITION,
+                Constants.COLUMN_MODIFIED_TIME, Constants.COLUMN_CREATED_TIME };
+
+        String where = Constants.COLUMN_TITLE + " = ? AND " +
+                Constants.COLUMN_SUBTITLE + " = ?";
+        String[] whereArgs = new String[]{title,subPlot};
+
+        Cursor cursor = database.query(Constants.NOTES_TABLE,columns, where, whereArgs,
+                null, null, Constants.COLUMN_POSITION);
+
+        if(cursor != null){
+            cursor.moveToFirst();
+
+        }
+        return cursor;
+    }
+
     public void deleteTitle(String title){
         database.delete(Constants.NOTES_TABLE ,Constants.COLUMN_TITLE + "=?", new String[]{title});
     }

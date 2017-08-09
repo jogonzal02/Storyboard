@@ -6,12 +6,14 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.jag27.sbv002.ModifyScene;
@@ -25,9 +27,6 @@ import com.example.jag27.sbv002.utility.OnStartDragListener;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by jag27 on 6/11/2017.
- */
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>
 implements ItemTouchHelperAdapter{
@@ -100,30 +99,34 @@ implements ItemTouchHelperAdapter{
 
         if(fromPosition < toPosition){
             for(int i = fromPosition; i < toPosition; i++){
-                Collections.swap(notes, i, i+1);
+
+
                 Note n1 = notes.get(i);
-                Note n2 = notes.get(i);
+                Note n2 = notes.get(i+1);
                 long n1Id = Long.parseLong(n1.getId());
                 long n2Id = Long.parseLong(n2.getId());
-                int n1Pos = n1.getPos() + 1;
-                int n2Pos = n1.getPos() - 1;
-                noteManager.updatePos(n1Pos, n1Id);
-                noteManager.updatePos(n2Pos, n2Id);
-
-
+                int n1Pos = n1.getPos();
+                int n2Pos = n2.getPos();
+                n1.setPos(n2Pos);
+                noteManager.updatePos(n2Pos, n1Id);
+                noteManager.updatePos(n1Pos, n2Id);
+                Collections.swap(notes, i, i+1);
             }
         }
         else {
             for (int i  = fromPosition; i> toPosition; i--){
-                Collections.swap(notes,i,i-1);
+
                 Note n1 = notes.get(i);
-                Note n2 = notes.get(i);
+                Note n2 = notes.get(i-1);
                 long n1Id = Long.parseLong(n1.getId());
                 long n2Id = Long.parseLong(n2.getId());
-                int n1Pos = n1.getPos() - 1;
-                int n2Pos = n1.getPos() + 1;
-                noteManager.updatePos(n1Pos, n1Id);
-                noteManager.updatePos(n2Pos, n2Id);
+                int n1Pos = n1.getPos();
+                int n2Pos = n2.getPos();
+                n1.setPos(n2Pos);
+                noteManager.updatePos(n2Pos, n1Id);
+                noteManager.updatePos(n1Pos, n2Id);
+                Collections.swap(notes, i, i-1);
+
             }
         }
 
