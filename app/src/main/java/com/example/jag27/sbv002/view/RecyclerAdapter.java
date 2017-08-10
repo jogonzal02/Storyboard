@@ -108,6 +108,7 @@ implements ItemTouchHelperAdapter{
                 int n1Pos = n1.getPos();
                 int n2Pos = n2.getPos();
                 n1.setPos(n2Pos);
+                n2.setPos(n1Pos);
                 noteManager.updatePos(n2Pos, n1Id);
                 noteManager.updatePos(n1Pos, n2Id);
                 Collections.swap(notes, i, i+1);
@@ -123,6 +124,7 @@ implements ItemTouchHelperAdapter{
                 int n1Pos = n1.getPos();
                 int n2Pos = n2.getPos();
                 n1.setPos(n2Pos);
+                n2.setPos(n1Pos);
                 noteManager.updatePos(n2Pos, n1Id);
                 noteManager.updatePos(n1Pos, n2Id);
                 Collections.swap(notes, i, i-1);
