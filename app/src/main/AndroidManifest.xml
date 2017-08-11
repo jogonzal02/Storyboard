@@ -23,10 +23,6 @@
             android:name=".AddScene"
             android:label="@string/add_scene"
             android:theme="@style/NewAppTheme" />
-        <activity
-            android:name=".ModifyScene"
-            android:label="Modify Scene"
-            android:theme="@style/AppTheme" />
         <activity android:name=".Load"></activity>
     </application>
 

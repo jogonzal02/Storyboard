@@ -70,14 +70,16 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
         //Place all note data into a array list
         ArrayList noteData = new ArrayList<>();
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+            //Gather note information from database
             String titleColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_SUBTITLE));
             String subPlotColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_SUBPLOT));
             String contentColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CONTENT));
-            int idColumn = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_ID));
+            long idColumn = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_ID));
             int posColumn = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_POSITION));
 
+            //Set database information into note object
             Note note = new Note();
-            note.setId(Integer.toString(idColumn));
+            note.setId(Long.toString(idColumn));
             note.setTitle(titleColumn);
             note.setSubPlot(subPlotColumn);
             note.setContent(contentColumn);
@@ -121,18 +123,22 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
             case R.id.new_card:
                 createScene();
                 break;
+
             case R.id.load_story:
                 Intent loader = new Intent(getApplicationContext(),Load.class);
                 startActivity(loader);
                 break;
+
             case R.id.sort_by_subplot:
                 Bundle bundle = new Bundle();
                 bundle.putString("title", storyTitle);
+                bundle.putString("Message", "StoryBoard");
                 bundle.putInt("MaxNote", notePos);
                 SortBySubplotFragment sortBySubplotFragment = new SortBySubplotFragment();
                 sortBySubplotFragment.setArguments(bundle);
                 sortBySubplotFragment.show(getFragmentManager(),"create_SBS_fragment");
                 break;
+
             case R.id.delete_story:
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                 alertDialog.setTitle("Delete Story");
@@ -171,6 +177,7 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
 
         Intent addNote = new Intent(getApplicationContext(), AddScene.class);
         addNote.putExtra("FileName",storyTitle);
+        addNote.putExtra("Message","AddScene");
         addNote.putExtra("Position", notePos);
 
         startActivity(addNote);

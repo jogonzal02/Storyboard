@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.example.jag27.sbv002.ModifyScene;
+import com.example.jag27.sbv002.AddScene;
 import com.example.jag27.sbv002.Note;
 import com.example.jag27.sbv002.R;
 import com.example.jag27.sbv002.database.NoteManager;
@@ -59,19 +59,22 @@ implements ItemTouchHelperAdapter{
         Typeface courierFont = Typeface.createFromAsset(context.getAssets(), "fonts/courier.TTF");
         Note note = notes.get(position);
 
+        //Set font of TextView
+        holder.titleText.setTypeface(courierFont);
+        holder.contentText.setTypeface(courierFont);
+
         if(note.getSubPlot() == null){
             holder.titleText.setText(note.getTitle());
         }else{
             holder.titleText.setText(note.getTitle()+": "+ note.getSubPlot() );
         }
-        holder.titleText.setTypeface(courierFont);
 
+        //Set value of TextViews
         holder.contentText.setText(note.getContent());
-        holder.contentText.setTypeface(courierFont);
-
         holder.idText.setText(note.getId());
         holder.posText.setText(Integer.toString(note.getPos()));
 
+        //Commences dragging functionality
         holder.titleText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -81,7 +84,6 @@ implements ItemTouchHelperAdapter{
                 return false;
             }
         });
-
     }
 
     @Override
@@ -92,6 +94,7 @@ implements ItemTouchHelperAdapter{
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         //Update positions in database and array list when  a note has been moved
+        //Selects two note objects at a time and swaps positions values
         Note fromNote = notes.get(fromPosition);
         Note toNote = notes.get(toPosition);
         long fromId = Long.parseLong(fromNote.getId());
@@ -175,15 +178,16 @@ implements ItemTouchHelperAdapter{
 
         @Override
         public void onClick(View view) {
+            //Modify note object
             final Intent modify_intent;
             String id = idText.getText().toString();
             String subTitle = titleText.getText().toString();
             String content = contentText.getText().toString();
 
-
-            modify_intent = new Intent(context,ModifyScene.class);
+            modify_intent = new Intent(context,AddScene.class);
             modify_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             modify_intent.putExtra("FileName",storyTitle);
+            modify_intent.putExtra("Message","ModifyScene");
             modify_intent.putExtra("SubTitle",subTitle);
             modify_intent.putExtra("Content",content);
             modify_intent.putExtra("ID",id);
