@@ -59,7 +59,11 @@ public class SortBySubplotFragment extends DialogFragment {
                 String subTitle = subTitleText.getText().toString();
 
                 Intent intent;
-                if (message.equals("StoryBoard"))intent = new Intent(getActivity(), StoryBoard.class);
+                if (message.equals("StoryBoard")){
+                    intent = new Intent(getActivity(), StoryBoard.class);
+                    intent.putExtra("SubTitle",subTitle);
+                    intent.putExtra("MaxNote", maxNote);
+                }
                 else {
                     intent = new Intent(getActivity(), AddScene.class);
 
@@ -70,14 +74,15 @@ public class SortBySubplotFragment extends DialogFragment {
                     }
                     else intent.putExtra("Message", "AddFromAddScene");
 
+                    intent.putExtra("SubTitle",subTitle+":");
                     intent.putExtra("Content", getArguments().getString("Content"));
                     intent.putExtra("Position", maxNote);
 
                 }
 
                 intent.putExtra("FileName",storyTitle);
-                intent.putExtra("SubTitle",subTitle+":");
-                intent.putExtra("MaxNote", maxNote);
+
+
 
                 startActivity(intent);
             }

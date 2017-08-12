@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.example.jag27.sbv002.AddScene;
 import com.example.jag27.sbv002.Note;
@@ -26,6 +26,7 @@ import com.example.jag27.sbv002.utility.OnStartDragListener;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Handler;
 
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>
@@ -75,13 +76,18 @@ implements ItemTouchHelperAdapter{
         holder.posText.setText(Integer.toString(note.getPos()));
 
         //Commences dragging functionality
+        final GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
+            public void onLongPress(MotionEvent event){
+                mDragListener.onStartDrag(holder);
+            }
+
+        });
+
+
         holder.titleText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(MotionEventCompat.getActionMasked(motionEvent) == MotionEvent.ACTION_DOWN){
-                    mDragListener.onStartDrag(holder);
-                }
-                return false;
+                return gestureDetector.onTouchEvent(motionEvent);
             }
         });
     }
@@ -102,7 +108,6 @@ implements ItemTouchHelperAdapter{
 
         if(fromPosition < toPosition){
             for(int i = fromPosition; i < toPosition; i++){
-
 
                 Note n1 = notes.get(i);
                 Note n2 = notes.get(i+1);
@@ -148,12 +153,14 @@ implements ItemTouchHelperAdapter{
         notifyItemRemoved(position);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder, View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder, View.OnClickListener{
 
         private TextView titleText;
         private TextView contentText;
         private TextView idText;
         private TextView posText;
+        private Handler handler;
+
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -194,5 +201,6 @@ implements ItemTouchHelperAdapter{
             context.startActivity(modify_intent);
 
         }
+
     }
 }

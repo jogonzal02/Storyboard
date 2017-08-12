@@ -61,9 +61,6 @@ public class NoteManager {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Constants.COLUMN_POSITION,pos);
 
-//        int i = database.update(Constants.NOTES_TABLE, contentValues,
-//                Constants.COLUMN_ID + "=" + _id, null);
-
         return database.update(Constants.NOTES_TABLE, contentValues,
                 Constants.COLUMN_ID + "=" + _id, null);
 
@@ -76,8 +73,6 @@ public class NoteManager {
         contentValues.put(Constants.COLUMN_CONTENT, content);
         contentValues.put(Constants.COLUMN_MODIFIED_TIME, System.currentTimeMillis());
 
-//        int i = database.update(Constants.NOTES_TABLE, contentValues,
-//                Constants.COLUMN_ID + "=" + _id, null);
         return database.update(Constants.NOTES_TABLE, contentValues,
                 Constants.COLUMN_ID + "=" + _id, null);
     }
@@ -91,8 +86,6 @@ public class NoteManager {
         contentValues.put(Constants.COLUMN_CONTENT, content);
         contentValues.put(Constants.COLUMN_MODIFIED_TIME, System.currentTimeMillis());
 
-//        int i = database.update(Constants.NOTES_TABLE, contentValues,
-//                Constants.COLUMN_ID + "=" + _id, null);
         return database.update(Constants.NOTES_TABLE, contentValues,
                 Constants.COLUMN_ID + "=" + _id, null);
     }
