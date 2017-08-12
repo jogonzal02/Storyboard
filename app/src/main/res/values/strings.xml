@@ -8,8 +8,9 @@
     <string name="cancel">Cancel</string>
     <string name="submit">Submit</string>
     <string name="title_activity_story_board">StoryBoard</string>
-    <string name="scene_title">scene_title</string>
-    <string name="write_synopsis">write_synopsis</string>
+    <string name="scene_title">scene title</string>
+    <string name="write_synopsis">write synopsis</string>
     <string name="no_scenes_found">No scenes found</string>
     <string name="add_scene">Add Scene</string>
+    <string name="list_characters">list characters</string>
 </resources>
