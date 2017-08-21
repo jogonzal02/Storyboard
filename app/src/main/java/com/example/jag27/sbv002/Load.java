@@ -17,7 +17,7 @@ public class Load extends AppCompatActivity {
 
 
     final String[] from = new String[]{Constants.COLUMN_TITLE};
-    final int[] to = new int[]{R.id.storyTitle};
+    final int[] to = new int[]{R.id.titleText};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class Load extends AppCompatActivity {
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView titleText = (TextView) view.findViewById(R.id.storyTitle);
+                TextView titleText = (TextView) view.findViewById(R.id.titleText);
                 String title = titleText.getText().toString();
 
                 Intent intent = new Intent(getApplicationContext(), StoryBoard.class);

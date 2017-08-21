@@ -11,7 +11,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     //Database info and version
     private static final String DATABASE_NAME = "storyboard.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
 
     public DatabaseHelper(Context context) {
@@ -29,12 +29,16 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String DATABASE_ALTER_NOTE_1 = "ALTER TABLE " + Constants.NOTES_TABLE + " ADD COLUMN " +
             Constants.COLUMN_SUBPLOT + " TEXT";
 
+    private static final String DATABASE_ALTER_BRIDGE_1 = "ALTER TABLE " + Constants.BRIDGE_TABLE +
+            " ADD COLUMN " + Constants.COLUMN_USED_TIME + " INTEGER";
+
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
         if(i < 4) sqLiteDatabase.execSQL(DATABASE_ALTER_NOTE_1);
         if(i < 5) sqLiteDatabase.execSQL(CREATE_CHARACTER);
         if(i < 6) sqLiteDatabase.execSQL(CREATE_BRIDGE);
+        if(i < 7) sqLiteDatabase.execSQL(DATABASE_ALTER_BRIDGE_1);
     }
 
     //Creating tables
@@ -63,6 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             +"("
             + Constants.COLUMN_ID + " integer primary key autoincrement, "
             + Constants.COLUMN_NOTEID + " integer not null, "
-            + Constants.COLUMN_CHARACTERID + " integer not null " + ")";
+            + Constants.COLUMN_CHARACTERID + " integer not null "
+            + Constants.COLUMN_USED_TIME + " integer not null "+")";
 
 }

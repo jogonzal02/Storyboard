@@ -10,6 +10,9 @@
         android:id="@+id/sort_by_subplot"
         android:title="Sort By Subplot"/>
     <item
+        android:id="@+id/sort_by_character"
+        android:title="Sort By Character"/>
+    <item
         android:id="@+id/delete_story"
         android:title="Delete Story"/>
 </menu>

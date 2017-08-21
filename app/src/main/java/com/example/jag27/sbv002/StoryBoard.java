@@ -12,10 +12,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.jag27.sbv002.database.NoteManager;
 import com.example.jag27.sbv002.utility.Constants;
@@ -24,6 +26,8 @@ import com.example.jag27.sbv002.utility.SimpleItemTouchHelperCallback;
 import com.example.jag27.sbv002.view.RecyclerAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class StoryBoard extends AppCompatActivity implements OnStartDragListener {
@@ -41,50 +45,92 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         String subPlot = null;
+        String character = null;
         notePos = 0;
 
         storyTitle = getIntent().getStringExtra("FileName");
         subPlot = getIntent().getStringExtra("SubTitle");
+        character = getIntent().getStringExtra("Character");
         setTitle(storyTitle);
 
         //Get note data from database, if story title previously created
         noteManager = new NoteManager(this);
         noteManager.open();
         Cursor cursor;
-        if (subPlot == null)cursor = noteManager.fetch(storyTitle);
-        else {
+        if (subPlot == null && character == null)cursor = noteManager.fetch(storyTitle);
+        else if(subPlot != null){
             cursor = noteManager.fetchStoriesSubPlot(storyTitle, subPlot);
+            notePos = getIntent().getIntExtra("MaxNote",notePos);
+        }else{
+            cursor = noteManager.findCharacter(storyTitle,character);
+            Long characterID = cursor.getLong(cursor.getColumnIndex(Constants.COLUMN_ID));
+            cursor.close();
+            cursor = noteManager.findBridgesByCharacterId(characterID);
             notePos = getIntent().getIntExtra("MaxNote",notePos);
         }
 
         //Get the position of the last note
-        if(cursor.moveToFirst() && subPlot== null){
+        if(cursor.moveToFirst() && subPlot== null && character == null){
             Cursor lastCursor = cursor;
             lastCursor.moveToLast();
             notePos = lastCursor.getInt(lastCursor.getColumnIndex(Constants.COLUMN_POSITION));
 
         }
 
+        Log.d("POsition", Integer.toString(notePos));
         //Place all note data into a array list
         ArrayList noteData = new ArrayList<>();
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
-            //Gather note information from database
-            String titleColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_SUBTITLE));
-            String subPlotColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_SUBPLOT));
-            String contentColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CONTENT));
-            long idColumn = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_ID));
-            int posColumn = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_POSITION));
+            if(character == null) {
+                //Gather note information from database
+//                String titleColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_SUBTITLE));
+//                String subPlotColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_SUBPLOT));
+//                String contentColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CONTENT));
+//                long idColumn = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_ID));
+//                int posColumn = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_POSITION));
+//
+//                //Set database information into note object
+//                Note note = new Note();
+//                note.setId(Long.toString(idColumn));
+//                note.setTitle(titleColumn);
+//                note.setSubPlot(subPlotColumn);
+//                note.setContent(contentColumn);
+//                note.setPos(posColumn);
 
-            //Set database information into note object
-            Note note = new Note();
-            note.setId(Long.toString(idColumn));
-            note.setTitle(titleColumn);
-            note.setSubPlot(subPlotColumn);
-            note.setContent(contentColumn);
-            note.setPos(posColumn);
-            noteData.add(note);
+                noteData.add(cursorToNote(cursor));
+            }else{
+                long noteId = cursor.getLong(cursor.getColumnIndex(Constants.COLUMN_NOTEID));
+                Cursor c = noteManager.findNoteById(noteId);
+
+                Log.d("Note ID", Long.toString(noteId));
+
+//                //Gather note information from database
+//                String titleColumn = c.getString(c.getColumnIndex(Constants.COLUMN_SUBTITLE));
+//                String subPlotColumn = c.getString(c.getColumnIndex(Constants.COLUMN_SUBPLOT));
+//                String contentColumn = c.getString(c.getColumnIndex(Constants.COLUMN_CONTENT));
+//                long idColumn = c.getInt(c.getColumnIndex(Constants.COLUMN_ID));
+//                int posColumn = c.getInt(c.getColumnIndex(Constants.COLUMN_POSITION));
+//
+//                //Set database information into note object
+//                Note note = new Note();
+//                note.setId(Long.toString(idColumn));
+//                note.setTitle(titleColumn);
+//                note.setSubPlot(subPlotColumn);
+//                note.setContent(contentColumn);
+//                note.setPos(posColumn);
+                noteData.add(cursorToNote(c));
+            }
+        }
+
+        if(character != null){
+            //sort array list
+            Collections.sort(noteData, new Comparator<Note>() {
+                @Override
+                public int compare(Note o, Note t1) {
+                    return Integer.valueOf(o.getPos()).compareTo(t1.getPos());
+                }
+            });
         }
 
         //Make recycler view into a grid
@@ -139,6 +185,17 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
                 sortBySubplotFragment.show(getFragmentManager(),"create_SBS_fragment");
                 break;
 
+            case R.id.sort_by_character:
+                Bundle b = new Bundle();
+                b.putString("title", storyTitle);
+                b.putString("Message", "StoryBoard");
+                b.putInt("MaxNote", notePos);
+                SortByCharacterFragment sortByCharacter = new SortByCharacterFragment();
+                sortByCharacter.setArguments(b);
+                sortByCharacter.show(getFragmentManager(),"create_SBC_fragment");
+                break;
+
+
             case R.id.delete_story:
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                 alertDialog.setTitle("Delete Story");
@@ -181,5 +238,24 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
         addNote.putExtra("Position", notePos);
 
         startActivity(addNote);
+    }
+
+    public Note cursorToNote(Cursor c){
+        //Gather note information from database
+        String titleColumn = c.getString(c.getColumnIndex(Constants.COLUMN_SUBTITLE));
+        String subPlotColumn = c.getString(c.getColumnIndex(Constants.COLUMN_SUBPLOT));
+        String contentColumn = c.getString(c.getColumnIndex(Constants.COLUMN_CONTENT));
+        long idColumn = c.getInt(c.getColumnIndex(Constants.COLUMN_ID));
+        int posColumn = c.getInt(c.getColumnIndex(Constants.COLUMN_POSITION));
+
+        //Set database information into note object
+        Note note = new Note();
+        note.setId(Long.toString(idColumn));
+        note.setTitle(titleColumn);
+        note.setSubPlot(subPlotColumn);
+        note.setContent(contentColumn);
+        note.setPos(posColumn);
+
+        return note;
     }
 }

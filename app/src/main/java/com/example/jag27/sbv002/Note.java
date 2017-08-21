@@ -1,6 +1,6 @@
 package com.example.jag27.sbv002;
 
-public class Note {
+public class Note{
     private String id;
     private String title;
     private String subPlot;
@@ -29,6 +29,4 @@ public class Note {
     public String getContent(){return content;}
     public String getId(){return id;}
     public int getPos(){return pos;}
-
-
 }

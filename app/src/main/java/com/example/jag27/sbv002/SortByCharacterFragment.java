@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,19 +19,19 @@ import com.example.jag27.sbv002.database.NoteManager;
 import com.example.jag27.sbv002.utility.Constants;
 
 
-public class SortBySubplotFragment extends DialogFragment {
+public class SortByCharacterFragment extends DialogFragment {
     private String storyTitle;
     private String message;
     private String content;
     private int maxNote;
 
-    final String[] from = new String[]{Constants.COLUMN_SUBTITLE};
+    final String[] from = new String[]{Constants.COLUMN_CHARACTER};
     final int[] to = new int[]{R.id.titleText};
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.sort_by_subplot_fragment,container,false);
+        View root = inflater.inflate(R.layout.sort_by_character,container,false);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         //Get values from bundle
@@ -43,39 +44,42 @@ public class SortBySubplotFragment extends DialogFragment {
         noteManager.open();
 
         //Gather all subtitle that are recognized as a subplot and insert onto ListView
-        Cursor cursor = noteManager.fetchSubplots(storyTitle);
+        Cursor cursor = noteManager.fetchCharacters(storyTitle);
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),R.layout.activity_view_story,cursor,
                 from,to,0);
         adapter.notifyDataSetChanged();
-        ListView mListView = (ListView) root.findViewById(R.id.SBSListView);
+        ListView mListView = (ListView) root.findViewById(R.id.SBCListView);
         mListView.setAdapter(adapter);
 
         //Launch activity base on the message value and send necessary information
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView subTitleText = (TextView) view.findViewById(R.id.titleText);
-                String subTitle = subTitleText.getText().toString();
+                TextView characterText = (TextView) view.findViewById(R.id.titleText);
+                String newCharacter = characterText.getText().toString();
 
                 Intent intent;
                 if (message.equals("StoryBoard")){
                     intent = new Intent(getActivity(), StoryBoard.class);
-                    intent.putExtra("SubTitle",subTitle);
+                    intent.putExtra("Character",newCharacter);
                     intent.putExtra("MaxNote", maxNote);
                 }
                 else {
                     intent = new Intent(getActivity(), AddScene.class);
+                    String oldCharacters = getArguments().getString("Character");
+
+                    if(oldCharacters == null)intent.putExtra("Characters",newCharacter+", ");
+                    else intent.putExtra("Characters", oldCharacters + " " + newCharacter+", ");
 
                     if(getArguments().containsKey("ID")){
                         long temp = getArguments().getLong("ID");
                         intent.putExtra("ID", Long.toString(temp));
                     }
-
                     intent.putExtra("Message", message);
-                    intent.putExtra("SubTitle",subTitle+":");
-                    intent.putExtra("Characters", getArguments().getString("Characters"));
+                    intent.putExtra("SubTitle",getArguments().getString("Subtitle"));
                     intent.putExtra("Content", getArguments().getString("Content"));
                     intent.putExtra("Position", maxNote);
+                    Log.d("POsition", Integer.toString(maxNote));
 
                 }
 
@@ -85,7 +89,7 @@ public class SortBySubplotFragment extends DialogFragment {
             }
         });
 
-        TextView noneText = (TextView) root.findViewById(R.id.SBSTextView);
+        TextView noneText = (TextView) root.findViewById(R.id.SBCTextView);
         if (message.equals("AddScene")){
             noneText.setVisibility(root.GONE);
         }else {

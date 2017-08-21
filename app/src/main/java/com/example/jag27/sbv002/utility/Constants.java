@@ -20,6 +20,7 @@ public class Constants {
     public static final String COLUMN_CREATED_TIME = "created_time";
     public static final String COLUMN_CHARACTER = "character";
     public static final String COLUMN_COLOR = "color";
+    public static final String COLUMN_USED_TIME = "used";
 
 
 

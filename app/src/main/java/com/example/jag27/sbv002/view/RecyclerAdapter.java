@@ -74,6 +74,7 @@ implements ItemTouchHelperAdapter{
         holder.contentText.setText(note.getContent());
         holder.idText.setText(note.getId());
         holder.posText.setText(Integer.toString(note.getPos()));
+        Log.d("Note ID", note.getId());
 
         //Commences dragging functionality
         final GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
