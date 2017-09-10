@@ -84,41 +84,12 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
             if(character == null) {
                 //Gather note information from database
-//                String titleColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_SUBTITLE));
-//                String subPlotColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_SUBPLOT));
-//                String contentColumn = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CONTENT));
-//                long idColumn = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_ID));
-//                int posColumn = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_POSITION));
-//
-//                //Set database information into note object
-//                Note note = new Note();
-//                note.setId(Long.toString(idColumn));
-//                note.setTitle(titleColumn);
-//                note.setSubPlot(subPlotColumn);
-//                note.setContent(contentColumn);
-//                note.setPos(posColumn);
-
                 noteData.add(cursorToNote(cursor));
             }else{
                 long noteId = cursor.getLong(cursor.getColumnIndex(Constants.COLUMN_NOTEID));
                 Cursor c = noteManager.findNoteById(noteId);
 
                 Log.d("Note ID", Long.toString(noteId));
-
-//                //Gather note information from database
-//                String titleColumn = c.getString(c.getColumnIndex(Constants.COLUMN_SUBTITLE));
-//                String subPlotColumn = c.getString(c.getColumnIndex(Constants.COLUMN_SUBPLOT));
-//                String contentColumn = c.getString(c.getColumnIndex(Constants.COLUMN_CONTENT));
-//                long idColumn = c.getInt(c.getColumnIndex(Constants.COLUMN_ID));
-//                int posColumn = c.getInt(c.getColumnIndex(Constants.COLUMN_POSITION));
-//
-//                //Set database information into note object
-//                Note note = new Note();
-//                note.setId(Long.toString(idColumn));
-//                note.setTitle(titleColumn);
-//                note.setSubPlot(subPlotColumn);
-//                note.setContent(contentColumn);
-//                note.setPos(posColumn);
                 noteData.add(cursorToNote(c));
             }
         }

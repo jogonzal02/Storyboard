@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,8 +26,8 @@ public class SortByCharacterFragment extends DialogFragment {
     private String content;
     private int maxNote;
 
-    final String[] from = new String[]{Constants.COLUMN_CHARACTER};
-    final int[] to = new int[]{R.id.titleText};
+    final String[] from = new String[]{Constants.COLUMN_CHARACTER, Constants.COLUMN_COLOR};
+    final int[] to = new int[]{R.id.titleText,R.id.titleColor};
 
     @Nullable
     @Override
@@ -43,10 +44,18 @@ public class SortByCharacterFragment extends DialogFragment {
         NoteManager noteManager = new NoteManager(getActivity());
         noteManager.open();
 
-        //Gather all subtitle that are recognized as a subplot and insert onto ListView
+        //Gather all characters and insert onto ListView
         Cursor cursor = noteManager.fetchCharacters(storyTitle);
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),R.layout.activity_view_story,cursor,
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),R.layout.activity_view_subcharacter,cursor,
                 from,to,0);
+        adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder(){
+            public boolean setViewValue(View view, Cursor cursor1,int columnIndex){
+                if (view.getId() == R.id.titleColor) {
+                    ((ImageView) view).setBackgroundColor(cursor1.getInt(cursor1.getColumnIndex(Constants.COLUMN_COLOR)));
+                    return true;
+                }else return false;
+            }
+        });
         adapter.notifyDataSetChanged();
         ListView mListView = (ListView) root.findViewById(R.id.SBCListView);
         mListView.setAdapter(adapter);
@@ -69,7 +78,7 @@ public class SortByCharacterFragment extends DialogFragment {
                     String oldCharacters = getArguments().getString("Character");
 
                     if(oldCharacters == null)intent.putExtra("Characters",newCharacter+", ");
-                    else intent.putExtra("Characters", oldCharacters + " " + newCharacter+", ");
+                    else intent.putExtra("Characters", oldCharacters + newCharacter+", ");
 
                     if(getArguments().containsKey("ID")){
                         long temp = getArguments().getLong("ID");

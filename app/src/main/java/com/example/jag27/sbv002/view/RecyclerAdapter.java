@@ -2,6 +2,7 @@ package com.example.jag27.sbv002.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.view.MotionEventCompat;
@@ -13,6 +14,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,10 +25,12 @@ import com.example.jag27.sbv002.AddScene;
 import com.example.jag27.sbv002.Note;
 import com.example.jag27.sbv002.R;
 import com.example.jag27.sbv002.database.NoteManager;
+import com.example.jag27.sbv002.utility.Constants;
 import com.example.jag27.sbv002.utility.ItemTouchHelperAdapter;
 import com.example.jag27.sbv002.utility.ItemTouchHelperViewHolder;
 import com.example.jag27.sbv002.utility.OnStartDragListener;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Handler;
@@ -69,12 +76,22 @@ implements ItemTouchHelperAdapter{
         }else{
             holder.titleText.setText(note.getTitle()+": "+ note.getSubPlot() );
         }
+        holder.titleText.setTypeface(null,Typeface.BOLD);
 
         //Set value of TextViews
         holder.contentText.setText(note.getContent());
         holder.idText.setText(note.getId());
         holder.posText.setText(Integer.toString(note.getPos()));
+        ArrayList<Integer> arrayList = getCharacterColorFromDB(Long.parseLong(note.getId()));
+        ColorAdapter colorAdapter = new ColorAdapter(context,R.layout.activity_view_color,arrayList);
+
+        for(int i = 0; i< arrayList.size(); i++){
+            View item = colorAdapter.getView(i,null,null);
+            holder.characterList.addView(item);
+        }
         Log.d("Note ID", note.getId());
+
+
 
         //Commences dragging functionality
         final GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
@@ -161,6 +178,7 @@ implements ItemTouchHelperAdapter{
         private TextView idText;
         private TextView posText;
         private Handler handler;
+        private LinearLayout characterList;
 
 
         public ViewHolder(final View itemView) {
@@ -170,6 +188,7 @@ implements ItemTouchHelperAdapter{
             contentText = (TextView)itemView.findViewById(R.id.content);
             idText = (TextView)itemView.findViewById(R.id.id);
             posText = (TextView) itemView.findViewById(R.id.position);
+            characterList = (LinearLayout) itemView.findViewById(R.id.character_list);
 
             itemView.setOnClickListener(this);
         }
@@ -204,4 +223,40 @@ implements ItemTouchHelperAdapter{
         }
 
     }
+
+    public ArrayList<Integer> getCharacterColorFromDB(long _id){
+
+        ArrayList<Integer> colorList = new ArrayList<Integer>();
+        Cursor bridgesCursor = noteManager.findBridgesByNoteId(_id);
+        long thresholdTime;
+
+        if(bridgesCursor.moveToFirst()) {
+
+            Cursor findCharacter;
+            thresholdTime = bridgesCursor.getLong(bridgesCursor.getColumnIndex(Constants.COLUMN_USED_TIME));
+            for (bridgesCursor.moveToFirst(); !bridgesCursor.isAfterLast(); bridgesCursor.moveToNext()) {
+                long charID = bridgesCursor.getLong(bridgesCursor.getColumnIndex(Constants.COLUMN_CHARACTERID));
+                long localTime = bridgesCursor.getLong(bridgesCursor.getColumnIndex(Constants.COLUMN_USED_TIME));
+
+                //If USED_TIME value is less than threshold time value, delete character from bridge table
+                if(localTime < thresholdTime) {
+                    long bridgeID = bridgesCursor.getLong(bridgesCursor.getColumnIndex(Constants.COLUMN_ID));
+                    noteManager.deleteBridge(bridgeID);
+                }
+
+
+                else {
+                    findCharacter = noteManager.findCharacterById(charID);
+                    String c = findCharacter.getString(findCharacter.getColumnIndex(Constants.COLUMN_CHARACTER));
+                    int color = findCharacter.getInt(findCharacter.getColumnIndex(Constants.COLUMN_COLOR));
+                    colorList.add(color);
+                    findCharacter.close();
+                }
+            }
+        }
+        bridgesCursor.close();
+
+        return colorList;
+    }
+
 }

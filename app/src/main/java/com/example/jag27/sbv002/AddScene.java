@@ -34,147 +34,6 @@ public class AddScene extends AppCompatActivity {
     private EditText characterEditText;
     private NoteManager noteManager;
 
-
-    // What I need in general
-    //StoryTitle, Message
-    //What I need for Add Scene
-    //Card position
-    //What I need Add Scene SBS & SBC
-    //Subtitle, Character, Content, Position
-    //What I need for Modify Scene
-    //Id,SubTitle, Character, Content,
-    //What I need Modify Scene SBS & SBC
-    //Id,Subtitle, Character, Content,
-
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setTitle("Add Scene");
-//        setContentView(R.layout.activity_add_scene);
-//
-//        subTitleEditText = (EditText) findViewById(R.id.sceneTitleText);
-//        descEditText = (EditText) findViewById(R.id.sceneDescriptionText);
-//        characterEditText = (EditText) findViewById(R.id.characterDescriptionText);
-//
-//        //Set the font type
-//        Typeface courierFont = Typeface.createFromAsset(getAssets(), "fonts/courier.TTF");
-//        subTitleEditText.setTypeface(courierFont);
-//        descEditText.setTypeface(courierFont);
-//        characterEditText.setTypeface(courierFont);
-//
-//        //Open DB
-//        noteManager = new NoteManager(this);
-//        noteManager.open();
-//
-//        storyTitle = getIntent().getStringExtra("FileName");
-//        message = getIntent().getStringExtra("Message");
-//        notePos = getIntent().getIntExtra("Position",-1);
-//
-//
-//        //Distinguish between Adding a note object and Modifying a note object
-//        if(message.equals("ModifyScene")) {
-//            String id = getIntent().getStringExtra("ID");
-//            String subTitle = getIntent().getStringExtra("SubTitle");
-//            String content = getIntent().getStringExtra("Content");
-//
-//            _id = Long.parseLong(id);
-//            subTitleEditText.setText(subTitle);
-//            descEditText.setText(content);
-//
-//            String characterString = "";
-//            Cursor bridgesCursor = noteManager.findBridgesByNoteId(_id);
-//            long thresholdTime;
-//
-//            if(bridgesCursor.moveToFirst()) {
-//
-//                Cursor findCharacter;
-//                thresholdTime = bridgesCursor.getLong(bridgesCursor.getColumnIndex(Constants.COLUMN_USED_TIME));
-//                for (bridgesCursor.moveToFirst(); !bridgesCursor.isAfterLast(); bridgesCursor.moveToNext()) {
-//                    long charID = bridgesCursor.getLong(bridgesCursor.getColumnIndex(Constants.COLUMN_CHARACTERID));
-//                    long localTime = bridgesCursor.getLong(bridgesCursor.getColumnIndex(Constants.COLUMN_USED_TIME));
-//
-//                    //If USED_TIME value is less than threshold time value, delete charater from bridge table
-//                    if(localTime < thresholdTime) {
-//                        long bridgeID = bridgesCursor.getLong(bridgesCursor.getColumnIndex(Constants.COLUMN_ID));
-//                        noteManager.deleteBridge(bridgeID);
-//                    }
-//
-//                    //Else use Character Id to find character name and insert into Character String
-//                    else {
-//                        findCharacter = noteManager.findCharacterById(charID);
-//                        String c = findCharacter.getString(findCharacter.getColumnIndex(Constants.COLUMN_CHARACTER));
-//                        int color = findCharacter.getInt(findCharacter.getColumnIndex(Constants.COLUMN_COLOR));
-//                        characterString += c + ",";
-//                        findCharacter.close();
-//                    }
-//                }
-//            }
-//            bridgesCursor.close();
-//
-//            //Insert all names in charaterString into edit Text
-//            characterEditText.setText(characterString);
-//
-//        } else if(message.equals("AddFromAddScene") || message.equals("ModifySceneFromSBC")) {
-//            String subTitle = getIntent().getStringExtra("SubTitle");
-//            String character = getIntent().getStringExtra("Characters");
-//            String content = getIntent().getStringExtra("Content");
-//
-//            subTitleEditText.setText(subTitle);
-//            characterEditText.setText(character);
-//            descEditText.setText(content);
-//        }
-//
-//        subTitleEditText.setOnLongClickListener(new View.OnLongClickListener() {
-//
-//            @Override
-//            public boolean onLongClick(View view) {
-//
-//                Bundle bundle = new Bundle();
-//                bundle.putString("Message","AddScene");
-//                bundle.putString("title", storyTitle);
-//                bundle.putString("Characters", characterEditText.getText().toString());
-//                bundle.putString("Content", descEditText.getText().toString());
-//                bundle.putInt("MaxNote", notePos);
-//
-//                if(message.equals("ModifyScene")){
-//                    bundle.putLong("ID",_id);
-//                }
-//
-//                SortBySubplotFragment sortBySubplotFragment = new SortBySubplotFragment();
-//                sortBySubplotFragment.setArguments(bundle);
-//                sortBySubplotFragment.show(getFragmentManager(),"create_SBS_fragment");
-//
-//                return true;
-//            }
-//        });
-//
-//        characterEditText.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//
-//                Bundle bundle = new Bundle();
-//                bundle.putString("Message","AddScene");
-//                bundle.putString("title", storyTitle);
-//                bundle.putString("Subtitle", subTitleEditText.getText().toString());
-//                bundle.putString("Character", characterEditText.getText().toString());
-//
-//
-//                bundle.putString("Content", descEditText.getText().toString());
-//                bundle.putInt("MaxNote", notePos);
-//
-//                if(message.equals("ModifyScene")){
-//                    bundle.putLong("ID",_id);
-//                }
-//
-//                SortByCharacterFragment sortByCharacterFragment = new SortByCharacterFragment();
-//                sortByCharacterFragment.setArguments(bundle);
-//                sortByCharacterFragment.show(getFragmentManager(),"create_SBC_fragment");
-//                return true;
-//            }
-//        });
-//
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -257,10 +116,6 @@ public class AddScene extends AppCompatActivity {
 
     }
 
-
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -337,7 +192,6 @@ public class AddScene extends AppCompatActivity {
         return bundle;
     }
 
-
     public String getCharacterFromDB(){
 
         String characterString = "";
@@ -352,7 +206,7 @@ public class AddScene extends AppCompatActivity {
                 long charID = bridgesCursor.getLong(bridgesCursor.getColumnIndex(Constants.COLUMN_CHARACTERID));
                 long localTime = bridgesCursor.getLong(bridgesCursor.getColumnIndex(Constants.COLUMN_USED_TIME));
 
-                //If USED_TIME value is less than threshold time value, delete charater from bridge table
+                //If USED_TIME value is less than threshold time value, delete character from bridge table
                 if(localTime < thresholdTime) {
                     long bridgeID = bridgesCursor.getLong(bridgesCursor.getColumnIndex(Constants.COLUMN_ID));
                     noteManager.deleteBridge(bridgeID);
@@ -373,8 +227,6 @@ public class AddScene extends AppCompatActivity {
         //Insert all names in charaterString into edit Text
         return characterString;
     }
-
-
 
     public void insertOrUpdateCharacter(){
 
@@ -423,8 +275,6 @@ public class AddScene extends AppCompatActivity {
                 noteManager.insertBridge(noteID, characterID, currentTime);
 
             }
-
         }
     }
-
 }

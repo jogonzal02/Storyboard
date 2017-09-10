@@ -38,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         if(i < 4) sqLiteDatabase.execSQL(DATABASE_ALTER_NOTE_1);
         if(i < 5) sqLiteDatabase.execSQL(CREATE_CHARACTER);
         if(i < 6) sqLiteDatabase.execSQL(CREATE_BRIDGE);
-        if(i < 7) sqLiteDatabase.execSQL(DATABASE_ALTER_BRIDGE_1);
+        if(i < 7 && i == 6) sqLiteDatabase.execSQL(DATABASE_ALTER_BRIDGE_1); // Will change after later date
     }
 
     //Creating tables
@@ -67,7 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             +"("
             + Constants.COLUMN_ID + " integer primary key autoincrement, "
             + Constants.COLUMN_NOTEID + " integer not null, "
-            + Constants.COLUMN_CHARACTERID + " integer not null "
+            + Constants.COLUMN_CHARACTERID + " integer not null, "
             + Constants.COLUMN_USED_TIME + " integer not null "+")";
 
 }
