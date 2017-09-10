@@ -59,7 +59,6 @@ public class AddScene extends AppCompatActivity {
         message = getIntent().getStringExtra("Message");
         notePos = getIntent().getIntExtra("Position",-1);
 
-
         if(getIntent().getExtras().containsKey("SubTitle")){//MOd, SBS, SBC
             String subTitle = getIntent().getStringExtra("SubTitle");
             String content = getIntent().getStringExtra("Content");
@@ -163,7 +162,16 @@ public class AddScene extends AppCompatActivity {
 
             case R.id.menu_delete:
 
-                if(message.equals("ModifyScene")|| message.equals("ModifySceneFromSBC")) noteManager.delete(_id);
+                if(message.equals("ModifyScene")|| message.equals("ModifySceneFromSBC")) {
+                    Cursor cursor = noteManager.fetchAfterPosition(storyTitle,notePos);
+                    for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+                        int pos = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_POSITION));
+                        long id = cursor.getLong(cursor.getColumnIndex(Constants.COLUMN_ID));
+                        noteManager.updatePos(pos-1,id);
+                    }
+                    noteManager.delete(_id);
+
+                }
 
                 Intent back = new Intent(getApplicationContext(),StoryBoard.class)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -176,12 +184,22 @@ public class AddScene extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent back = new Intent(getApplicationContext(),StoryBoard.class)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Toast.makeText(this,"Returning to Storyboard",
+                Toast.LENGTH_SHORT).show();
+        back.putExtra("FileName",storyTitle);
+        startActivity(back);
+    }
+
     public Bundle createBundle(){
         Bundle bundle = new Bundle();
         bundle.putString("Message",message);
         bundle.putString("title", storyTitle);
         bundle.putString("Subtitle", subTitleEditText.getText().toString());
-        bundle.putString("Character", characterEditText.getText().toString());
+        bundle.putString("Characters", characterEditText.getText().toString());
         bundle.putString("Content", descEditText.getText().toString());
         bundle.putInt("MaxNote", notePos);
 

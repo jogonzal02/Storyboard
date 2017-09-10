@@ -3,15 +3,22 @@
     <item
         android:id="@+id/new_card"
         android:title="@string/add_scene"/>
-    <item
-        android:id="@+id/load_story"
-        android:title="@string/load_storyboard"/>
+
     <item
         android:id="@+id/sort_by_subplot"
         android:title="Sort By Subplot"/>
     <item
         android:id="@+id/sort_by_character"
         android:title="Sort By Character"/>
+
+    <item
+        android:id="@+id/create_story"
+        android:title="@string/create_storyboard"/>
+
+    <item
+        android:id="@+id/load_story"
+        android:title="@string/load_storyboard"/>
+
     <item
         android:id="@+id/delete_story"
         android:title="Delete Story"/>

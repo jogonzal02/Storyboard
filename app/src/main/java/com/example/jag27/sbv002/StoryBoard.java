@@ -51,7 +51,7 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
 
         storyTitle = getIntent().getStringExtra("FileName");
         subPlot = getIntent().getStringExtra("SubTitle");
-        character = getIntent().getStringExtra("Character");
+        character = getIntent().getStringExtra("Characters");
         setTitle(storyTitle);
 
         //Get note data from database, if story title previously created
@@ -164,6 +164,11 @@ public class StoryBoard extends AppCompatActivity implements OnStartDragListener
                 SortByCharacterFragment sortByCharacter = new SortByCharacterFragment();
                 sortByCharacter.setArguments(b);
                 sortByCharacter.show(getFragmentManager(),"create_SBC_fragment");
+                break;
+
+            case R.id.create_story:
+                CreateStoryBoardFragment createStoryBoardFragment = new CreateStoryBoardFragment();
+                createStoryBoardFragment.show(getFragmentManager(),"create_storyboard_fragment");
                 break;
 
 

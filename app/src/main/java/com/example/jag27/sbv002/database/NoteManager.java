@@ -151,6 +151,22 @@ public class NoteManager {
         return cursor;
     }
 
+    public Cursor fetchAfterPosition(String title,int position){
+        String[] columns = new String[]{Constants.COLUMN_ID,Constants.COLUMN_POSITION};
+        String where = Constants.COLUMN_TITLE + " = ? AND " +
+                Constants.COLUMN_POSITION + " > ?";
+        String[] whereArgs = new String[] {title,Integer.toString(position)};
+
+        Cursor cursor = database.query(Constants.NOTES_TABLE,columns, where,whereArgs,
+                null,null,null);
+
+        if(cursor != null){
+            cursor.moveToFirst();
+
+        }
+        return cursor;
+    }
+
     public void insert(String title, String subTitle,String content, int position){
         ContentValues contentValues = new ContentValues();
         contentValues.put(Constants.COLUMN_TITLE, title);
@@ -306,7 +322,7 @@ public class NoteManager {
         String[] whereArgs = new String[]{Long.toString(noteId)};
 
         Cursor cursor = database.query(Constants.BRIDGE_TABLE,columns, where, whereArgs,
-                null, null, Constants.COLUMN_USED_TIME+" DESC");
+                null, null, Constants.COLUMN_USED_TIME+" DESC, " + Constants.COLUMN_CHARACTERID + " ASC");
 
         if(cursor != null){
             cursor.moveToFirst();

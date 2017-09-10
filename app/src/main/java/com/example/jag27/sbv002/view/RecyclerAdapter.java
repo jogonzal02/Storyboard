@@ -83,6 +83,7 @@ implements ItemTouchHelperAdapter{
         holder.idText.setText(note.getId());
         holder.posText.setText(Integer.toString(note.getPos()));
         ArrayList<Integer> arrayList = getCharacterColorFromDB(Long.parseLong(note.getId()));
+
         ColorAdapter colorAdapter = new ColorAdapter(context,R.layout.activity_view_color,arrayList);
 
         for(int i = 0; i< arrayList.size(); i++){
@@ -210,6 +211,8 @@ implements ItemTouchHelperAdapter{
             String id = idText.getText().toString();
             String subTitle = titleText.getText().toString();
             String content = contentText.getText().toString();
+            int pos = Integer.parseInt(posText.getText().toString());
+
 
             modify_intent = new Intent(context,AddScene.class);
             modify_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -217,6 +220,7 @@ implements ItemTouchHelperAdapter{
             modify_intent.putExtra("Message","ModifyScene");
             modify_intent.putExtra("SubTitle",subTitle);
             modify_intent.putExtra("Content",content);
+            modify_intent.putExtra("Position",pos);
             modify_intent.putExtra("ID",id);
             context.startActivity(modify_intent);
 

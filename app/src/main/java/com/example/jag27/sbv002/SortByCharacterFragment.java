@@ -70,12 +70,12 @@ public class SortByCharacterFragment extends DialogFragment {
                 Intent intent;
                 if (message.equals("StoryBoard")){
                     intent = new Intent(getActivity(), StoryBoard.class);
-                    intent.putExtra("Character",newCharacter);
+                    intent.putExtra("Characters",newCharacter);
                     intent.putExtra("MaxNote", maxNote);
                 }
                 else {
                     intent = new Intent(getActivity(), AddScene.class);
-                    String oldCharacters = getArguments().getString("Character");
+                    String oldCharacters = getArguments().getString("Characters");
 
                     if(oldCharacters == null)intent.putExtra("Characters",newCharacter+", ");
                     else intent.putExtra("Characters", oldCharacters + newCharacter+", ");
